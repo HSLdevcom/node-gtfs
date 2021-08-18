@@ -1,5 +1,5 @@
 const model = {
-  filenameBase: 'translations',
+  filenameBase: 'translations3',
   schema: [
     {
       name: 'id',
