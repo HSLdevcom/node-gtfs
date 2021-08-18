@@ -14,6 +14,7 @@ import stopTimes from '../models/gtfs/stop-times.js';
 import stops from '../models/gtfs/stops.js';
 import transfers from '../models/gtfs/transfers.js';
 import translations from '../models/gtfs/translations.js';
+import translations3 from '../models/gtfs/translations3.js';
 import trips from '../models/gtfs/trips.js';
 
 import directions from '../models/non-standard/directions.js';
@@ -47,6 +48,7 @@ const models = [
   stops,
   transfers,
   translations,
+  translations3,
   trips,
   directions,
   stopAttributes,
