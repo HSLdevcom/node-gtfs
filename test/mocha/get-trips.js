@@ -2,9 +2,8 @@
 
 import should from 'should';
 
-import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import { importGtfs, getTrips } from '../../index.js';
+import { openDb, getDb, closeDb, importGtfs, getTrips } from '../../index.js';
 
 describe('getTrips():', () => {
   before(async () => {
@@ -13,14 +12,15 @@ describe('getTrips():', () => {
   });
 
   after(async () => {
-    await closeDb();
+    const db = getDb(config);
+    await closeDb(db);
   });
 
   it('should return empty array if no trips exist', async () => {
     const tripId = 'fake-trip-id';
 
     const results = await getTrips({
-      trip_id: tripId
+      trip_id: tripId,
     });
     should.exists(results);
     results.should.have.length(0);
@@ -30,7 +30,7 @@ describe('getTrips():', () => {
     const routeId = 'Bu-16APR';
 
     const results = await getTrips({
-      route_id: routeId
+      route_id: routeId,
     });
 
     const expectedResult = {
@@ -43,7 +43,7 @@ describe('getTrips():', () => {
       block_id: null,
       shape_id: 'cal_tam_sf',
       wheelchair_accessible: 1,
-      bikes_allowed: 1
+      bikes_allowed: 1,
     };
 
     should.exists(results);

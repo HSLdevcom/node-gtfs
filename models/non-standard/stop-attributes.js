@@ -5,19 +5,20 @@ const model = {
     {
       name: 'id',
       type: 'integer',
-      primary: true
+      primary: true,
     },
     {
       name: 'stop_id',
       type: 'varchar(255)',
       required: true,
-      index: true
+      index: true,
     },
     {
       name: 'stop_city',
-      type: 'varchar(255)'
-    }
-  ]
+      type: 'varchar(255)',
+      nocase: true,
+    },
+  ],
 };
 
 export default model;

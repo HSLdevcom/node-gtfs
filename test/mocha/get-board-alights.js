@@ -2,9 +2,14 @@
 
 import should from 'should';
 
-import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import { importGtfs, getBoardAlights } from '../../index.js';
+import {
+  openDb,
+  getDb,
+  closeDb,
+  importGtfs,
+  getBoardAlights,
+} from '../../index.js';
 
 describe('getBoardAlights():', () => {
   before(async () => {
@@ -13,14 +18,15 @@ describe('getBoardAlights():', () => {
   });
 
   after(async () => {
-    await closeDb();
+    const db = getDb(config);
+    await closeDb(db);
   });
 
   it('should return empty array if no board alights (GTFS-ride)', async () => {
     const tripId = 'fake-trip-id';
 
     const results = await getBoardAlights({
-      trip_id: tripId
+      trip_id: tripId,
     });
     should.exists(results);
     results.should.have.length(0);

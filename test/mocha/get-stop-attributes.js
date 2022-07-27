@@ -2,9 +2,14 @@
 
 import should from 'should';
 
-import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import { importGtfs, getStopAttributes } from '../../index.js';
+import {
+  openDb,
+  getDb,
+  closeDb,
+  importGtfs,
+  getStopAttributes,
+} from '../../index.js';
 
 describe('getStopAttributes():', () => {
   before(async () => {
@@ -13,14 +18,15 @@ describe('getStopAttributes():', () => {
   });
 
   after(async () => {
-    await closeDb();
+    const db = getDb(config);
+    await closeDb(db);
   });
 
   it('should return empty array if no stop attributes', async () => {
     const stopId = 'fake-stop-id';
 
     const results = await getStopAttributes({
-      stop_id: stopId
+      stop_id: stopId,
     });
     should.exists(results);
     results.should.have.length(0);

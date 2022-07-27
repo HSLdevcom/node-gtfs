@@ -2,9 +2,14 @@
 
 import should from 'should';
 
-import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import { importGtfs, getStoptimes } from '../../index.js';
+import {
+  openDb,
+  getDb,
+  closeDb,
+  importGtfs,
+  getStoptimes,
+} from '../../index.js';
 
 describe('getStoptimes():', () => {
   before(async () => {
@@ -13,14 +18,15 @@ describe('getStoptimes():', () => {
   });
 
   after(async () => {
-    await closeDb();
+    const db = getDb(config);
+    await closeDb(db);
   });
 
   it('should return an empty array if no stoptimes exist for given agency', async () => {
     const stopId = 'fake-stop-id';
 
     const results = await getStoptimes({
-      stop_id: stopId
+      stop_id: stopId,
     });
     should.exists(results);
     results.should.have.length(0);
@@ -30,7 +36,7 @@ describe('getStoptimes():', () => {
     const stopId = '70011';
 
     const results = await getStoptimes({
-      stop_id: stopId
+      stop_id: stopId,
     });
     should.exist(results);
     results.should.have.length(80);
@@ -43,11 +49,13 @@ describe('getStoptimes():', () => {
   it('should return array of stoptimes for given trip_id ordered by stop_sequence', async () => {
     const tripId = '421a';
 
-    const results = await getStoptimes({
-      trip_id: tripId
-    }, [], [
-      ['stop_sequence', 'ASC']
-    ]);
+    const results = await getStoptimes(
+      {
+        trip_id: tripId,
+      },
+      [],
+      [['stop_sequence', 'ASC']]
+    );
 
     should.exist(results);
     results.should.have.length(24);
