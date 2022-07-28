@@ -2,8 +2,9 @@
 
 import should from 'should';
 
+import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import { openDb, getDb, closeDb, importGtfs, getShapes } from '../../index.js';
+import { importGtfs, getShapes } from '../../index.js';
 
 describe('getShapes():', () => {
   before(async () => {
@@ -12,15 +13,14 @@ describe('getShapes():', () => {
   });
 
   after(async () => {
-    const db = getDb(config);
-    await closeDb(db);
+    await closeDb();
   });
 
   it('should return an empty array if no shapes exist', async () => {
     const shapeId = 'fake-shape-id';
 
     const results = await getShapes({
-      shape_id: shapeId,
+      shape_id: shapeId
     });
     should.exists(results);
     results.should.have.length(0);
@@ -32,27 +32,30 @@ describe('getShapes():', () => {
 
     const results = await getShapes({
       route_id: routeId,
-      service_id: serviceId,
+      service_id: serviceId
     });
     should.exists(results);
     results.should.have.length(0);
   });
 
   it('should return array of shapes', async () => {
-    const results = await getShapes({}, [
-      'shape_id',
-      'shape_pt_lat',
-      'shape_pt_lon',
-      'shape_pt_sequence',
-      'shape_dist_traveled',
-    ]);
+    const results = await getShapes(
+      {},
+      [
+        'shape_id',
+        'shape_pt_lat',
+        'shape_pt_lon',
+        'shape_pt_sequence',
+        'shape_dist_traveled'
+      ]
+    );
 
     const expectedResult = {
       shape_id: 'cal_tam_sf',
       shape_pt_lat: 37.607_687_113_495_64,
       shape_pt_lon: -122.394_679_784_774_78,
       shape_pt_sequence: 244,
-      shape_dist_traveled: null,
+      shape_dist_traveled: null
     };
 
     should.exist(results);
@@ -64,14 +67,14 @@ describe('getShapes():', () => {
     const routeId = 'TaSj-16APR';
     const results = await getShapes(
       {
-        route_id: routeId,
+        route_id: routeId
       },
       [
         'shape_id',
         'shape_pt_lat',
         'shape_pt_lon',
         'shape_pt_sequence',
-        'shape_dist_traveled',
+        'shape_dist_traveled'
       ]
     );
 
@@ -80,7 +83,7 @@ describe('getShapes():', () => {
       shape_pt_lat: 37.323558,
       shape_pt_lon: -121.8919,
       shape_pt_sequence: 10051,
-      shape_dist_traveled: null,
+      shape_dist_traveled: null
     };
 
     should.exist(results);
@@ -91,14 +94,17 @@ describe('getShapes():', () => {
   it('should return array of shapes for multiple routes', async () => {
     const results = await getShapes(
       {
-        route_id: ['Lo-16APR', 'Li-16APR'],
+        route_id: [
+          'Lo-16APR',
+          'Li-16APR'
+        ]
       },
       [
         'shape_id',
         'shape_pt_lat',
         'shape_pt_lon',
         'shape_pt_sequence',
-        'shape_dist_traveled',
+        'shape_dist_traveled'
       ]
     );
 
@@ -107,7 +113,7 @@ describe('getShapes():', () => {
       shape_pt_lat: 37.694_407_548_683_614,
       shape_pt_lon: -122.401_739_358_901_98,
       shape_pt_sequence: 306,
-      shape_dist_traveled: null,
+      shape_dist_traveled: null
     };
 
     should.exist(results);
@@ -116,9 +122,11 @@ describe('getShapes():', () => {
   });
 
   it('should return empty array of for invalid route', async () => {
-    const results = await getShapes({
-      route_id: 'not-valid',
-    });
+    const results = await getShapes(
+      {
+        route_id: 'not-valid'
+      }
+    );
 
     should.exist(results);
     results.length.should.equal(0);
@@ -130,14 +138,14 @@ describe('getShapes():', () => {
     const results = await getShapes(
       {
         route_id: routeId,
-        direction_id: directionId,
+        direction_id: directionId
       },
       [
         'shape_id',
         'shape_pt_lat',
         'shape_pt_lon',
         'shape_pt_sequence',
-        'shape_dist_traveled',
+        'shape_dist_traveled'
       ]
     );
 
@@ -146,7 +154,7 @@ describe('getShapes():', () => {
       shape_pt_lat: 37.323558,
       shape_pt_lon: -121.8919,
       shape_pt_sequence: 10051,
-      shape_dist_traveled: null,
+      shape_dist_traveled: null
     };
 
     should.exist(results);
@@ -158,14 +166,14 @@ describe('getShapes():', () => {
     const tripId = '329';
     const results = await getShapes(
       {
-        trip_id: tripId,
+        trip_id: tripId
       },
       [
         'shape_id',
         'shape_pt_lat',
         'shape_pt_lon',
         'shape_pt_sequence',
-        'shape_dist_traveled',
+        'shape_dist_traveled'
       ]
     );
 
@@ -174,7 +182,7 @@ describe('getShapes():', () => {
       shape_pt_lat: 37.337_664_044_379_544,
       shape_pt_lon: -121.908_105_611_801_15,
       shape_pt_sequence: 25,
-      shape_dist_traveled: null,
+      shape_dist_traveled: null
     };
 
     should.exist(results);
@@ -186,14 +194,14 @@ describe('getShapes():', () => {
     const serviceId = 'CT-16APR-Caltrain-Sunday-02';
     const results = await getShapes(
       {
-        service_id: serviceId,
+        service_id: serviceId
       },
       [
         'shape_id',
         'shape_pt_lat',
         'shape_pt_lon',
         'shape_pt_sequence',
-        'shape_dist_traveled',
+        'shape_dist_traveled'
       ]
     );
 
@@ -202,39 +210,11 @@ describe('getShapes():', () => {
       shape_pt_lat: 37.294079,
       shape_pt_lon: -121.874108,
       shape_pt_sequence: 10154,
-      shape_dist_traveled: null,
+      shape_dist_traveled: null
     };
 
     should.exist(results);
     results.length.should.equal(713);
-    results.should.containEql(expectedResult);
-  });
-
-  it('should return array of shapes for specific shape_id', async () => {
-    const shapeId = 'cal_sf_tam';
-    const results = await getShapes(
-      {
-        shape_id: shapeId,
-      },
-      [
-        'shape_id',
-        'shape_pt_lat',
-        'shape_pt_lon',
-        'shape_pt_sequence',
-        'shape_dist_traveled',
-      ]
-    );
-
-    const expectedResult = {
-      shape_id: 'cal_sf_tam',
-      shape_pt_lat: 37.682971245836484,
-      shape_pt_lon: -122.39507675170898,
-      shape_pt_sequence: 88,
-      shape_dist_traveled: null,
-    };
-
-    should.exist(results);
-    results.length.should.equal(401);
     results.should.containEql(expectedResult);
   });
 });

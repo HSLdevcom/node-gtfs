@@ -2,14 +2,9 @@
 
 import should from 'should';
 
+import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import {
-  openDb,
-  getDb,
-  closeDb,
-  importGtfs,
-  getRiderships,
-} from '../../index.js';
+import { importGtfs, getRiderships } from '../../index.js';
 
 describe('getRiderships():', () => {
   before(async () => {
@@ -18,15 +13,14 @@ describe('getRiderships():', () => {
   });
 
   after(async () => {
-    const db = getDb(config);
-    await closeDb(db);
+    await closeDb();
   });
 
   it('should return empty array if no riderships (GTFS-ride)', async () => {
     const routeId = 'fake-route-id';
 
     const results = await getRiderships({
-      route_id: routeId,
+      route_id: routeId
     });
     should.exists(results);
     results.should.have.length(0);

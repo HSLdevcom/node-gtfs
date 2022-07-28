@@ -2,14 +2,9 @@
 
 import should from 'should';
 
+import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import {
-  openDb,
-  getDb,
-  closeDb,
-  importGtfs,
-  getStopsAsGeoJSON,
-} from '../../index.js';
+import { importGtfs, getStopsAsGeoJSON } from '../../index.js';
 
 describe('getStopsAsGeoJSON(): ', () => {
   before(async () => {
@@ -18,14 +13,13 @@ describe('getStopsAsGeoJSON(): ', () => {
   });
 
   after(async () => {
-    const db = getDb(config);
-    await closeDb(db);
+    await closeDb();
   });
 
   it('should return geojson with an empty features array if no stops exist', async () => {
     const stopId = 'fake-stop-id';
     const geojson = await getStopsAsGeoJSON({
-      stop_id: stopId,
+      stop_id: stopId
     });
 
     should.exist(geojson);
@@ -47,26 +41,12 @@ describe('getStopsAsGeoJSON(): ', () => {
     const stopId = '70031';
 
     const geojson = await getStopsAsGeoJSON({
-      stop_id: stopId,
+      stop_id: stopId
     });
 
     should.exist(geojson);
     geojson.type.should.equal('FeatureCollection');
     geojson.features.length.should.equal(1);
-    should.exist(geojson.features[0].geometry.coordinates);
-    geojson.features[0].geometry.coordinates.length.should.equal(2);
-  });
-
-  it('should return geojson with stops if they exist for a specific shapeId', async () => {
-    const shapeId = 'cal_sf_tam';
-
-    const geojson = await getStopsAsGeoJSON({
-      shape_id: shapeId,
-    });
-
-    should.exist(geojson);
-    geojson.type.should.equal('FeatureCollection');
-    geojson.features.length.should.equal(25);
     should.exist(geojson.features[0].geometry.coordinates);
     geojson.features[0].geometry.coordinates.length.should.equal(2);
   });

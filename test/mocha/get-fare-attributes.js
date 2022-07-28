@@ -2,14 +2,9 @@
 
 import should from 'should';
 
+import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import {
-  openDb,
-  getDb,
-  closeDb,
-  importGtfs,
-  getFareAttributes,
-} from '../../index.js';
+import { importGtfs, getFareAttributes } from '../../index.js';
 
 describe('getFareAttributes():', () => {
   before(async () => {
@@ -18,15 +13,14 @@ describe('getFareAttributes():', () => {
   });
 
   after(async () => {
-    const db = getDb(config);
-    await closeDb(db);
+    await closeDb();
   });
 
   it('should return empty array if no fare_attributes', async () => {
     const fareId = 'not_real';
 
     const results = await getFareAttributes({
-      fare_id: fareId,
+      fare_id: fareId
     });
 
     should.exists(results);
@@ -37,7 +31,7 @@ describe('getFareAttributes():', () => {
     const fareId = 'OW_1_20160228';
 
     const results = await getFareAttributes({
-      fare_id: fareId,
+      fare_id: fareId
     });
 
     const expectedResult = {
@@ -47,7 +41,7 @@ describe('getFareAttributes():', () => {
       payment_method: 1,
       transfers: 0,
       agency_id: null,
-      transfer_duration: null,
+      transfer_duration: null
     };
 
     should.exist(results);

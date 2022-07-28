@@ -2,8 +2,9 @@
 
 import should from 'should';
 
+import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import { openDb, getDb, closeDb, importGtfs, getRoutes } from '../../index.js';
+import { importGtfs, getRoutes } from '../../index.js';
 
 describe('getRoutes():', () => {
   before(async () => {
@@ -12,22 +13,25 @@ describe('getRoutes():', () => {
   });
 
   after(async () => {
-    const db = getDb(config);
-    await closeDb(db);
+    await closeDb();
   });
 
   it('should return empty array if no routes for given agency exist', async () => {
     const routeId = 'fake-route-id';
 
     const results = await getRoutes({
-      route_id: routeId,
+      route_id: routeId
     });
     should.exists(results);
     results.should.have.length(0);
   });
 
   it('should return expected routes', async () => {
-    const results = await getRoutes({}, [], [['route_long_name', 'ASC']]);
+    const results = await getRoutes(
+      {},
+      [],
+      [['route_long_name', 'ASC']]
+    );
 
     const expectedResults = [
       {
@@ -42,7 +46,7 @@ describe('getRoutes():', () => {
         route_text_color: null,
         route_sort_order: null,
         continuous_pickup: null,
-        continuous_drop_off: null,
+        continuous_drop_off: null
       },
       {
         route_id: 'Li-16APR',
@@ -56,7 +60,7 @@ describe('getRoutes():', () => {
         route_text_color: null,
         route_sort_order: null,
         continuous_pickup: null,
-        continuous_drop_off: null,
+        continuous_drop_off: null
       },
       {
         route_id: 'Lo-16APR',
@@ -70,7 +74,7 @@ describe('getRoutes():', () => {
         route_text_color: null,
         route_sort_order: null,
         continuous_pickup: null,
-        continuous_drop_off: null,
+        continuous_drop_off: null
       },
       {
         route_id: 'TaSj-16APR',
@@ -84,8 +88,8 @@ describe('getRoutes():', () => {
         route_text_color: null,
         route_sort_order: null,
         continuous_pickup: null,
-        continuous_drop_off: null,
-      },
+        continuous_drop_off: null
+      }
     ];
 
     should.exist(results);
@@ -113,8 +117,8 @@ describe('getRoutes():', () => {
         route_text_color: null,
         route_sort_order: null,
         continuous_pickup: null,
-        continuous_drop_off: null,
-      },
+        continuous_drop_off: null
+      }
     ];
 
     should.exist(results);

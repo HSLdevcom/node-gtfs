@@ -1,14 +1,9 @@
 /* eslint-env mocha */
 import should from 'should';
 
+import { openDb, closeDb } from '../../lib/db.js';
 import config from '../test-config.js';
-import {
-  openDb,
-  getDb,
-  closeDb,
-  importGtfs,
-  getAgencies,
-} from '../../index.js';
+import { importGtfs, getAgencies } from '../../index.js';
 
 describe('getAgencies():', () => {
   before(async () => {
@@ -17,14 +12,13 @@ describe('getAgencies():', () => {
   });
 
   after(async () => {
-    const db = getDb(config);
-    await closeDb(db);
+    await closeDb();
   });
 
   it('should return empty array if no agencies exist', async () => {
     const agencyId = 'fake-agency-id';
     const results = await getAgencies({
-      agency_id: agencyId,
+      agency_id: agencyId
     });
     should.exists(results);
     results.should.have.length(0);
@@ -42,7 +36,7 @@ describe('getAgencies():', () => {
       agency_lang: 'en',
       agency_phone: '800-660-4287',
       agency_fare_url: null,
-      agency_email: null,
+      agency_email: null
     };
 
     should.exist(results);
@@ -56,7 +50,7 @@ describe('getAgencies():', () => {
 
     const results = await getAgencies({
       agency_id: agencyId,
-      agency_lang: agencyLand,
+      agency_lang: agencyLand
     });
 
     const expectedResult = {
@@ -68,7 +62,7 @@ describe('getAgencies():', () => {
       agency_lang: 'en',
       agency_phone: '800-660-4287',
       agency_fare_url: null,
-      agency_email: null,
+      agency_email: null
     };
 
     should.exist(results);
@@ -79,16 +73,16 @@ describe('getAgencies():', () => {
   it('should return only specific keys for expected agency for agency_id', async () => {
     const agencyId = 'CT';
 
-    const results = await getAgencies(
-      {
-        agency_id: agencyId,
-      },
-      ['agency_url', 'agency_lang']
-    );
+    const results = await getAgencies({
+      agency_id: agencyId
+    }, [
+      'agency_url',
+      'agency_lang'
+    ]);
 
     const expectedResult = {
       agency_url: 'http://www.caltrain.com',
-      agency_lang: 'en',
+      agency_lang: 'en'
     };
 
     should.exist(results);

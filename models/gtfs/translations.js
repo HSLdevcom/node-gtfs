@@ -9,7 +9,7 @@ const model = {
     {
       name: 'lang',
       type: 'varchar(255)',
-      required: true,
+      required: true
     },
     {
       name: 'translation',
